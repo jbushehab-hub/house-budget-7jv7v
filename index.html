@@ -2378,13 +2378,13 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
           <div style="font-size:16px;font-weight:900;color:#ECF0F1;font-family:Nunito,sans-serif;margin-bottom:6px;">Publishing to GitHub Pages…</div>
           <div style="font-size:12px;color:#7F8C8D;line-height:1.6;" id="sb-loading-msg">Creating repo &amp; uploading your app. Takes ~20 seconds.</div>
           <div style="margin:20px auto 0;width:200px;height:5px;background:#243447;border-radius:99px;overflow:hidden;">
-            <div id="sb-progress-bar" style="height: 100%; width: 25.3141%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
+            <div id="sb-progress-bar" style="height: 100%; width: 21.1466%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
           </div>
         </div>
       </div>
 
       <!-- SUCCESS STATE -->
-      <div id="sb-success" style="display:none;">
+      <div id="sb-success" style="display: none;">
         <div style="font-size:11px;font-weight:700;color:#6E40C9;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">Live on GitHub Pages 🎉</div>
         <div style="font-size:17px;font-weight:900;color:#ECF0F1;font-family:Nunito,sans-serif;margin-bottom:6px;">📱 Scan to Install</div>
         <div style="font-size:11px;color:#7F8C8D;margin-bottom:14px;">⏱ Page goes live in ~1 min after first publish.</div>
@@ -2392,14 +2392,14 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
         <!-- QR Code -->
         <div style="display:flex;justify-content:center;margin-bottom:14px;">
           <div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;">
-            <img id="sb-qr" src="" alt="QR Code" style="width:160px;height:160px;display:block;border-radius:6px;">
+            <img id="sb-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&amp;data=https%3A%2F%2Fjbushehab-hub.github.io%2Fhouse-budget-7jv7v%2F&amp;margin=6" alt="QR Code" style="width:160px;height:160px;display:block;border-radius:6px;">
           </div>
         </div>
 
         <!-- URL Copy Row -->
         <div style="display:flex;gap:8px;margin-bottom:12px;">
-          <div id="sb-url-box" style="flex:1;background:#0F1923;border:1px solid #243447;border-radius:12px;padding:10px 14px;font-size:11px;color:#00C7B7;font-family:'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
-          <button onclick="copySandboxUrl()" id="sb-copy-btn" style="background:#00C7B7;border:none;border-radius:12px;padding:10px 16px;color:#000;font-weight:800;font-size:12px;cursor:pointer;flex-shrink:0;font-family:'Nunito Sans',sans-serif;">Copy</button>
+          <div id="sb-url-box" style="flex:1;background:#0F1923;border:1px solid #243447;border-radius:12px;padding:10px 14px;font-size:11px;color:#00C7B7;font-family:'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">https://jbushehab-hub.github.io/house-budget-7jv7v/</div>
+          <button onclick="copySandboxUrl()" id="sb-copy-btn" style="background: rgb(110, 64, 201); border: none; border-radius: 12px; padding: 10px 16px; color: rgb(0, 0, 0); font-weight: 800; font-size: 12px; cursor: pointer; flex-shrink: 0; font-family: &quot;Nunito Sans&quot;, sans-serif;">Copy</button>
         </div>
 
         <!-- Share via WA / Email -->
@@ -2411,10 +2411,10 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
         <!-- Install Instructions -->
         <div style="background:#1A2637;border-radius:16px;padding:14px;margin-bottom:12px;border:1px solid #243447;">
           <div style="display:flex;gap:6px;margin-bottom:12px;">
-            <button onclick="showInstallTab('android')" id="tab-android" style="flex:1;background:#25D366;border:none;border-radius:10px;padding:7px;color:#000;font-weight:800;font-size:11px;cursor:pointer;font-family:'Nunito Sans',sans-serif;">🤖 Android</button>
-            <button onclick="showInstallTab('ios')" id="tab-ios" style="flex:1;background:#243447;border:none;border-radius:10px;padding:7px;color:#7F8C8D;font-weight:800;font-size:11px;cursor:pointer;font-family:'Nunito Sans',sans-serif;">🍎 iPhone / iPad</button>
+            <button onclick="showInstallTab('android')" id="tab-android" style="flex: 1 1 0%; border: none; border-radius: 10px; padding: 7px; font-weight: 800; font-size: 11px; cursor: pointer; font-family: &quot;Nunito Sans&quot;, sans-serif; background: rgb(37, 211, 102); color: rgb(0, 0, 0);">🤖 Android</button>
+            <button onclick="showInstallTab('ios')" id="tab-ios" style="flex: 1 1 0%; border: none; border-radius: 10px; padding: 7px; font-weight: 800; font-size: 11px; cursor: pointer; font-family: &quot;Nunito Sans&quot;, sans-serif; background: rgb(36, 52, 71); color: rgb(127, 140, 141);">🍎 iPhone / iPad</button>
           </div>
-          <div id="install-android">
+          <div id="install-android" style="display: block;">
             <div style="font-size:11px;color:#7F8C8D;line-height:1.9;">
               <b style="color:#ECF0F1;">1.</b> Open link in <b style="color:#25D366;">Chrome</b><br>
               <b style="color:#ECF0F1;">2.</b> Tap <b style="color:#ECF0F1;">⋮ menu</b> (top-right)<br>
