@@ -14,7 +14,7 @@ const _m={name:"House Budget Tracker",short_name:"HouseTracker",start_url:"./",d
         {src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230F1923'/%3E%3Ctext y='420' x='20' font-size='440'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
 const _mb=new Blob([JSON.stringify(_m)],{type:"application/json"});
 const _ml=document.createElement("link");_ml.rel="manifest";_ml.href=URL.createObjectURL(_mb);document.head.appendChild(_ml);
-</script><link rel="manifest" href="blob:null/65e9be3a-5bf5-42db-85c2-be867b8e3ace">
+</script><link rel="manifest" href="blob:null/8a47a661-f7c6-4e4e-9158-1cae91d50ccf">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&amp;family=Nunito+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
 <style>
 /* ── CSS Variables: Dark & Light Mode ── */
@@ -154,13 +154,82 @@ body.light .nb .ni{filter:none;}
 .att-header-sub{font-size:10px;color:var(--mu);margin-top:1px;}
 .att-list{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch;}
 .att-footer{padding:10px 12px;border-top:1px solid var(--bo);padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));}
-.att-item{display:flex;align-items:center;gap:10px;background:var(--cardH);border-radius:12px;padding:10px 12px;border:1px solid var(--bo);}
-.att-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;cursor:pointer;}
-.att-doc{width:44px;height:44px;border-radius:8px;background:var(--bo);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.att-info{flex:1;min-width:0;}
-.att-name{font-size:12px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.att-meta{font-size:10px;color:var(--mu);margin-top:2px;}
-.att-del{background:#E74C3C22;border:none;border-radius:8px;padding:6px 10px;color:#E74C3C;font-size:14px;flex-shrink:0;cursor:pointer;font-weight:700;}
+/* ── Attachment grid layout ── */
+.att-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+@media(min-width:480px){.att-grid{grid-template-columns:repeat(3,1fr);}}
+@media(orientation:landscape)and(min-width:600px){.att-grid{grid-template-columns:repeat(4,1fr);}}
+
+/* Image preview card */
+.att-img-card{
+  position:relative;border-radius:14px;overflow:hidden;
+  background:var(--bo);cursor:pointer;
+  aspect-ratio:1/1;border:1.5px solid var(--bo);
+  transition:transform .15s,box-shadow .15s;
+}
+.att-img-card:active{transform:scale(.96);}
+.att-img-card img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+.att-img-card .att-overlay{
+  position:absolute;inset:0;background:linear-gradient(to top,#000a 0%,transparent 50%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:8px;
+  opacity:0;transition:opacity .2s;
+}
+.att-img-card:hover .att-overlay,.att-img-card:active .att-overlay{opacity:1;}
+.att-img-card .att-img-name{font-size:10px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.att-img-card .att-img-size{font-size:9px;color:#ffffffaa;}
+.att-img-card .att-del-img{
+  position:absolute;top:6px;right:6px;
+  background:#00000088;border:none;border-radius:50%;
+  width:26px;height:26px;color:#fff;font-size:12px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;backdrop-filter:blur(4px);
+}
+.att-img-card .att-dl-img{
+  position:absolute;top:6px;left:6px;
+  background:#00000088;border:none;border-radius:50%;
+  width:26px;height:26px;color:#fff;font-size:12px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);text-decoration:none;
+}
+
+/* Document/file row card */
+.att-doc-card{
+  display:flex;align-items:center;gap:10px;
+  background:var(--cardH);border-radius:12px;padding:11px 12px;
+  border:1.5px solid var(--bo);
+}
+.att-doc-icon{
+  width:46px;height:46px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;
+}
+.att-doc-icon.pdf{background:#E74C3C22;}
+.att-doc-icon.word{background:#3498DB22;}
+.att-doc-icon.excel{background:#2ECC7122;}
+.att-doc-icon.zip{background:#9B59B622;}
+.att-doc-icon.txt{background:#F39C1222;}
+.att-doc-icon.other{background:var(--bo);}
+.att-doc-info{flex:1;min-width:0;}
+.att-doc-name{font-size:12px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.att-doc-meta{font-size:10px;color:var(--mu);margin-top:2px;}
+.att-doc-actions{display:flex;gap:5px;flex-shrink:0;}
+.att-doc-dl{
+  background:#2ECC7122;border:none;border-radius:8px;padding:6px 9px;
+  color:#2ECC71;font-size:13px;cursor:pointer;text-decoration:none;
+  display:flex;align-items:center;
+}
+.att-doc-del{
+  background:#E74C3C22;border:none;border-radius:8px;padding:6px 9px;
+  color:#E74C3C;font-size:13px;cursor:pointer;font-weight:700;
+}
+
+/* Section separator */
+.att-section-lbl{
+  font-size:10px;font-weight:800;color:var(--mu);
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:4px 2px 6px;
+}
 .att-add-btn{
   width:100%;border:none;border-radius:13px;padding:13px;
   background:linear-gradient(135deg,#3498DB,#1ABC9C);color:#fff;
@@ -178,19 +247,59 @@ body.light .nb .ni{filter:none;}
   border-radius:99px;padding:2px 7px;border:1px solid #3498DB33;
 }
 
-/* Image full-screen viewer */
+/* ── Full-screen image viewer ── */
 #imgViewer{
-  position:fixed;inset:0;z-index:600;background:#000d;
-  display:none;align-items:center;justify-content:center;
-  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  position:fixed;inset:0;z-index:600;background:#000;
+  display:none;flex-direction:column;
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
 }
 #imgViewer.open{display:flex;}
-#imgViewer img{max-width:96vw;max-height:88vh;border-radius:14px;object-fit:contain;}
-#imgViewerClose{
-  position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;
-  background:#0009;border:none;border-radius:50%;width:38px;height:38px;
-  color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+#imgViewerTop{
+  position:absolute;top:0;left:0;right:0;
+  padding:calc(12px + env(safe-area-inset-top,0px)) 14px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(to bottom,#000a,transparent);
+  z-index:10;
 }
+#imgViewerTitle{font-size:12px;font-weight:700;color:#fff;opacity:.9;max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#imgViewerCounter{font-size:11px;color:#ffffffaa;font-weight:700;}
+#imgViewerClose{
+  background:#ffffff22;border:none;border-radius:50%;width:36px;height:36px;
+  color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);border:1px solid #ffffff33;
+}
+#imgViewerTrack{
+  flex:1;display:flex;align-items:center;overflow:hidden;
+  position:relative;touch-action:pan-y;
+}
+#imgViewerSlide{
+  display:flex;align-items:center;height:100%;
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
+}
+.ivs-slide{
+  flex-shrink:0;width:100vw;height:100%;
+  display:flex;align-items:center;justify-content:center;padding:16px;
+}
+.ivs-slide img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;}
+#imgViewerPrev,#imgViewerNext{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:#ffffff18;border:1px solid #ffffff33;border-radius:50%;
+  width:40px;height:40px;color:#fff;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(6px);z-index:10;transition:opacity .2s;
+}
+#imgViewerPrev{left:10px;}
+#imgViewerNext{right:10px;}
+#imgViewerPrev:disabled,#imgViewerNext:disabled{opacity:.2;pointer-events:none;}
+#imgViewerDots{
+  position:absolute;bottom:calc(18px + env(safe-area-inset-bottom,0px));
+  left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:10;
+}
+.ivs-dot{
+  width:6px;height:6px;border-radius:50%;background:#ffffff44;
+  transition:background .2s,transform .2s;cursor:pointer;border:none;padding:0;
+}
+.ivs-dot.active{background:#fff;transform:scale(1.3);}
 
 /* ── Theme toggle button ── */
 #themebtn{
@@ -2140,10 +2249,19 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
   </div>
 </div>
 
-<!-- IMAGE VIEWER -->
-<div id="imgViewer" onclick="closeImgViewer()">
-  <button id="imgViewerClose" onclick="closeImgViewer()">✕</button>
-  <img id="imgViewerImg" src="" alt="">
+<!-- FULL-SCREEN IMAGE VIEWER (swipeable) -->
+<div id="imgViewer">
+  <div id="imgViewerTop">
+    <div id="imgViewerTitle">Photo</div>
+    <div id="imgViewerCounter"></div>
+    <button id="imgViewerClose" onclick="closeImgViewer()">✕</button>
+  </div>
+  <div id="imgViewerTrack">
+    <div id="imgViewerSlide"></div>
+  </div>
+  <button id="imgViewerPrev" onclick="ivNav(-1)">‹</button>
+  <button id="imgViewerNext" onclick="ivNav(1)">›</button>
+  <div id="imgViewerDots"></div>
 </div>
 
 <!-- SHARE SHEET OVERLAY -->
@@ -2260,7 +2378,7 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
           <div style="font-size:16px;font-weight:900;color:#ECF0F1;font-family:Nunito,sans-serif;margin-bottom:6px;">Publishing to GitHub Pages…</div>
           <div style="font-size:12px;color:#7F8C8D;line-height:1.6;" id="sb-loading-msg">Creating repo &amp; uploading your app. Takes ~20 seconds.</div>
           <div style="margin:20px auto 0;width:200px;height:5px;background:#243447;border-radius:99px;overflow:hidden;">
-            <div id="sb-progress-bar" style="height: 100%; width: 28.487%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
+            <div id="sb-progress-bar" style="height: 100%; width: 19.1489%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
           </div>
         </div>
       </div>
@@ -2877,20 +2995,20 @@ function setSyncUI(connected,room){
 }
 
 /* Pre-fill inputs if already configured */
+const _DEFAULT_DB="https://house-budget-c64c1-default-rtdb.asia-southeast1.firebasedatabase.app";
+const _DEFAULT_ROOM="Jassim2026";
 function openSync(){
   const overlay=document.getElementById("syncoverlay");
   overlay.style.display="block";
-  const cfg=JSON.parse(localStorage.getItem("hbt_sync_cfg")||"null");
-  if(cfg){
-    const u=document.getElementById("inp-dburl");
-    const r=document.getElementById("inp-room");
-    if(u)u.value=cfg.dbUrl||"";
-    if(r)r.value=cfg.room||"";
-    const box=document.getElementById("sync-status-box");
-    const detail=document.getElementById("sync-status-detail");
-    if(box)box.style.display="block";
-    if(detail)detail.textContent="Connected to room: "+cfg.room;
-  }
+  const cfg=JSON.parse(localStorage.getItem("hbt_sync_cfg")||"null")||{dbUrl:_DEFAULT_DB,room:_DEFAULT_ROOM};
+  const u=document.getElementById("inp-dburl");
+  const r=document.getElementById("inp-room");
+  if(u)u.value=cfg.dbUrl||_DEFAULT_DB;
+  if(r)r.value=cfg.room||_DEFAULT_ROOM;
+  const box=document.getElementById("sync-status-box");
+  const detail=document.getElementById("sync-status-detail");
+  if(box)box.style.display="block";
+  if(detail)detail.textContent="Connected to room: "+(cfg.room||_DEFAULT_ROOM);
 }
 function closeSync(){document.getElementById("syncoverlay").style.display="none";}
 function saveSync(){
@@ -2915,8 +3033,37 @@ function disconnectSync(){
 
 /* Init sync badge from saved config */
 (function(){
-  const cfg=JSON.parse(localStorage.getItem("hbt_sync_cfg")||"null");
-  if(cfg&&cfg.room) setSyncUI(true,cfg.room);
+  // Default Firebase config — pre-loaded if no user config saved
+  const DEFAULT_DB = "https://house-budget-c64c1-default-rtdb.asia-southeast1.firebasedatabase.app";
+  const DEFAULT_ROOM = "Jassim2026";
+
+  let cfg = JSON.parse(localStorage.getItem("hbt_sync_cfg")||"null");
+
+  // If no config saved yet, inject the default
+  if(!cfg || !cfg.dbUrl || !cfg.room){
+    cfg = {dbUrl: DEFAULT_DB, room: DEFAULT_ROOM};
+    localStorage.setItem("hbt_sync_cfg", JSON.stringify(cfg));
+  }
+
+  // Pre-fill the sync overlay inputs
+  const u = document.getElementById("inp-dburl");
+  const r = document.getElementById("inp-room");
+  if(u) u.value = cfg.dbUrl;
+  if(r) r.value = cfg.room;
+
+  // Start sync
+  if(window._appStartSync){
+    window._appStartSync(cfg.dbUrl, cfg.room);
+  } else {
+    // React not ready yet — wait for it
+    window.addEventListener("load", function(){
+      setTimeout(function(){
+        if(window._appStartSync) window._appStartSync(cfg.dbUrl, cfg.room);
+        setSyncUI(true, cfg.room);
+      }, 800);
+    });
+    setSyncUI(true, cfg.room);
+  }
 })();
 
 /* ══ SHARE HELPERS ══ */
