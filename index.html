@@ -14,7 +14,7 @@ const _m={name:"House Budget Tracker",short_name:"HouseTracker",start_url:"./",d
         {src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230F1923'/%3E%3Ctext y='420' x='20' font-size='440'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
 const _mb=new Blob([JSON.stringify(_m)],{type:"application/json"});
 const _ml=document.createElement("link");_ml.rel="manifest";_ml.href=URL.createObjectURL(_mb);document.head.appendChild(_ml);
-</script><link rel="manifest" href="blob:null/8bb17004-f330-4251-9293-e82cd4833d92"><link rel="manifest" href="blob:https://jbushehab-hub.github.io/ad6ef73e-5757-4be8-814e-975bd9d3ec2b"><link rel="manifest" href="blob:null/fd695ae9-75b7-4b8c-929c-3691a55578b1">
+</script><link rel="manifest" href="blob:null/0fbf4449-11be-474e-878d-827ecd931931"><link rel="manifest" href="blob:https://jbushehab-hub.github.io/ad6ef73e-5757-4be8-814e-975bd9d3ec2b"><link rel="manifest" href="blob:null/fd695ae9-75b7-4b8c-929c-3691a55578b1">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&amp;family=Nunito+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
 <style>
 /* ── CSS Variables: Dark & Light Mode ── */
@@ -6522,11 +6522,12 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
         
         <button class="pg-btn pg-btn-secondary" style="margin-top:6px;" onclick="pg_back()">← Back</button>
       </div></div>
-  <div style="width:100%;max-width:400px;margin-top:8px;">
-    <button onclick="openShare()" style="width:100%;background:var(--cardH);border:1px solid var(--bo);border-radius:16px;padding:13px;font-size:13px;font-weight:800;color:var(--mu);cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">
+  <div style="width:100%;max-width:400px;margin-top:8px;display:flex;gap:8px;">
+    <button onclick="pg_shareCleanApp()" style="flex:1;background:var(--cardH);border:1px solid var(--bo);border-radius:16px;padding:13px;font-size:13px;font-weight:800;color:var(--mu);cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">
       <span style="font-size:16px;">📤</span> Share App
     </button>
   </div>
+  <div id="pg-share-status" style="width: 100%; max-width: 400px; margin-top: 6px; font-size: 11px; color: var(--mu); text-align: center; display: block;">📥 File downloaded — send it via WhatsApp, Telegram or Email.</div>
 </div>
 <nav id="bottomnav"><button class="nb on" style="flex: 1 1 0%; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; padding: 0px 4px; cursor: pointer;"><span class="ni">📊</span><span class="nl" style="color:#F0A500">Overview</span><div class="nd"></div></button><button class="nb" style="flex: 1 1 0%; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; padding: 0px 4px; cursor: pointer;"><span class="ni">💰</span><span class="nl" style="color:#7F8C8D">Spending</span></button><button class="nb" style="flex: 1 1 0%; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; padding: 0px 4px; cursor: pointer;"><span class="ni">📋</span><span class="nl" style="color:#7F8C8D">Payments</span></button><button class="nb" style="flex: 1 1 0%; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; padding: 0px 4px; cursor: pointer;"><span class="ni">🏦</span><span class="nl" style="color:#7F8C8D">Funds</span></button></nav>
 
@@ -6767,7 +6768,7 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
           <div style="font-size:16px;font-weight:900;color:#ECF0F1;font-family:Nunito,sans-serif;margin-bottom:6px;">Publishing to GitHub Pages…</div>
           <div style="font-size:12px;color:#7F8C8D;line-height:1.6;" id="sb-loading-msg">Creating repo &amp; uploading your app. Takes ~20 seconds.</div>
           <div style="margin:20px auto 0;width:200px;height:5px;background:#243447;border-radius:99px;overflow:hidden;">
-            <div id="sb-progress-bar" style="height: 100%; width: 19.5745%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
+            <div id="sb-progress-bar" style="height: 100%; width: 21.9656%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
           </div>
         </div>
       </div>
@@ -8690,11 +8691,13 @@ document.addEventListener("keydown", e => {
     else document.body.classList.remove("light");
     /* Force React app to re-read fresh localStorage */
     if(window._forceProfileReload) window._forceProfileReload();
-    /* Update topbar avatar */
+    /* Update topbar avatar + name */
     const profiles2=getProfiles();
     const activeP=profiles2.find(p=>p.id===profileId);
     const avEl=document.getElementById("pg-topbar-avatar");
+    const nmEl=document.getElementById("pg-topbar-name");
     if(avEl&&activeP) avEl.textContent=activeP.avatar;
+    if(nmEl&&activeP) nmEl.textContent=activeP.name;
   }
 
   /* Expose switch-profile button for topbar */
@@ -8704,6 +8707,71 @@ document.addEventListener("keydown", e => {
     gate.classList.remove("hidden");
     renderProfileList();
   };
+
+  /* Log out: save data, clear active session, show gate */
+  window.pg_logout=function(){
+    const activeId=localStorage.getItem(SEL_KEY);
+    if(activeId) saveProfileData(activeId);
+    localStorage.removeItem(SEL_KEY);
+    /* Clear working keys so app shows nothing */
+    ["hbt_cats","hbt_exp","hbt_budget","hbt_noh","hbt_funds"].forEach(k=>{
+      try{localStorage.removeItem(k);}catch(e){}
+    });
+    /* Reset topbar */
+    const avEl=document.getElementById("pg-topbar-avatar");
+    const nmEl=document.getElementById("pg-topbar-name");
+    if(avEl) avEl.textContent="👤";
+    if(nmEl) nmEl.textContent="";
+    gate.classList.remove("hidden");
+    renderProfileList();
+  };
+
+  /* Share a CLEAN copy of the app — no profile data, no localStorage content */
+  window.pg_shareCleanApp=function(){
+    const statusEl=document.getElementById("pg-share-status");
+    try{
+      /* Clone the current HTML but strip all inline injected state */
+      let html=document.documentElement.outerHTML;
+
+      /* Remove the rendered bottomnav innerHTML (has stale tab state) */
+      /* The clean file will boot fresh — profiles start empty */
+      /* We do NOT strip profile JS — recipients can create their own profiles */
+
+      const blob=new Blob([html],{type:"text/html"});
+      const file=new File([blob],"HouseBudgetTracker.html",{type:"text/html"});
+
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        navigator.share({
+          files:[file],
+          title:"House Budget Tracker",
+          text:"Open this file in Chrome to use the House Budget Tracker app."
+        }).then(()=>{
+          if(statusEl){statusEl.style.display="block";statusEl.textContent="✅ Shared successfully!";}
+          setTimeout(()=>{if(statusEl)statusEl.style.display="none";},3000);
+        }).catch(()=>{
+          _pg_fallbackDownload(file,statusEl);
+        });
+      } else {
+        _pg_fallbackDownload(file,statusEl);
+      }
+    }catch(e){
+      if(statusEl){statusEl.style.display="block";statusEl.textContent="⚠️ Could not share. Try again.";}
+    }
+  };
+
+  function _pg_fallbackDownload(file,statusEl){
+    const url=URL.createObjectURL(file);
+    const a=document.createElement("a");
+    a.href=url; a.download="HouseBudgetTracker.html";
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+    if(statusEl){
+      statusEl.style.display="block";
+      statusEl.textContent="📥 File downloaded — send it via WhatsApp, Telegram or Email.";
+      setTimeout(()=>{statusEl.style.display="none";},5000);
+    }
+  }
 
   /* ── Boot ── */
   const autoProfile=localStorage.getItem(SEL_KEY);
@@ -8721,7 +8789,9 @@ document.addEventListener("keydown", e => {
         if(savedTheme==="light") document.body.classList.add("light");
         else document.body.classList.remove("light");
         const avEl2=document.getElementById("pg-topbar-avatar");
+        const nmEl2=document.getElementById("pg-topbar-name");
         if(avEl2&&profile) avEl2.textContent=profile.avatar;
+        if(nmEl2&&profile) nmEl2.textContent=profile.name;
       }
     } else {
       renderProfileList();
