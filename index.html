@@ -14,7 +14,7 @@ const _m={name:"House Budget Tracker",short_name:"HouseTracker",start_url:"./",d
         {src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230F1923'/%3E%3Ctext y='420' x='20' font-size='440'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
 const _mb=new Blob([JSON.stringify(_m)],{type:"application/json"});
 const _ml=document.createElement("link");_ml.rel="manifest";_ml.href=URL.createObjectURL(_mb);document.head.appendChild(_ml);
-</script><link rel="manifest" href="blob:null/0fbf4449-11be-474e-878d-827ecd931931"><link rel="manifest" href="blob:https://jbushehab-hub.github.io/ad6ef73e-5757-4be8-814e-975bd9d3ec2b"><link rel="manifest" href="blob:null/fd695ae9-75b7-4b8c-929c-3691a55578b1">
+</script><link rel="manifest" href="blob:null/0fa35a9d-510e-44c7-a6cc-1859213069f9"><link rel="manifest" href="blob:https://jbushehab-hub.github.io/ad6ef73e-5757-4be8-814e-975bd9d3ec2b"><link rel="manifest" href="blob:null/fd695ae9-75b7-4b8c-929c-3691a55578b1">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&amp;family=Nunito+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
 <style>
 /* ── CSS Variables: Dark & Light Mode ── */
@@ -6481,7 +6481,13 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
 
 <!-- TOP BAR -->
 <div id="topbar">
-  <div id="tbl" style="font-size:11px;font-weight:700;color:#F0A500;letter-spacing:3px;text-transform:uppercase;"> Overview</div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <button id="pg-topbar-btn" onclick="pg_openProfileMenu()" style="display:flex;align-items:center;gap:6px;background:var(--cardH);border:1px solid var(--bo);border-radius:20px;padding:4px 10px 4px 6px;cursor:pointer;font-family:'Nunito Sans',sans-serif;">
+      <span id="pg-topbar-avatar" style="font-size:18px;line-height:1;">👤</span>
+      <span id="pg-topbar-name" style="font-size:11px;font-weight:700;color:var(--tx);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+    </button>
+    <div id="tbl" style="font-size:11px;font-weight:700;color:#F0A500;letter-spacing:3px;text-transform:uppercase;"> Overview</div>
+  </div>
   <div style="display:flex;align-items:center;gap:8px;">
     <button id="themebtn" onclick="toggleTheme()" title="Toggle dark/light mode">
       <span id="themeicon">🌙</span>
@@ -6503,31 +6509,80 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
 <!-- BOTTOM NAV -->
 
 <!-- ══ PROFILE GATE ══ -->
-<div id="profileGate" class="hidden">
+<div id="profileGate" class="">
   <div class="pg-logo">🏡</div>
   <div class="pg-title">House Budget</div>
   <div class="pg-sub">Select your profile to continue</div>
-  <div id="pg-content" style="width:100%;max-width:400px;">
-      <div class="pg-card" style="text-align:center;">
-        <div style="font-size:36px;margin-bottom:4px;">👨</div>
-        <div style="font-size:16px;font-weight:800;color:var(--tx);margin-bottom:4px;">Jassim</div>
-        <div style="font-size:12px;color:var(--mu);margin-bottom:18px;">Enter PIN to unlock</div>
-        <div class="pg-pin-row" id="pg-pin-dots">
-          <div class="pg-pin-dot filled" id="pgd_0"></div><div class="pg-pin-dot filled" id="pgd_1"></div><div class="pg-pin-dot filled" id="pgd_2"></div><div class="pg-pin-dot filled" id="pgd_3"></div>
-        </div>
-        <div id="pg-pin-err" class="pg-err" style="display:none;"></div>
-        <div class="pg-numpad">
-          <button class="pg-num" onclick="pg_numpad('1')">1</button><button class="pg-num" onclick="pg_numpad('2')">2</button><button class="pg-num" onclick="pg_numpad('3')">3</button><button class="pg-num" onclick="pg_numpad('4')">4</button><button class="pg-num" onclick="pg_numpad('5')">5</button><button class="pg-num" onclick="pg_numpad('6')">6</button><button class="pg-num" onclick="pg_numpad('7')">7</button><button class="pg-num" onclick="pg_numpad('8')">8</button><button class="pg-num" onclick="pg_numpad('9')">9</button><button class="pg-num" onclick="pg_numpad('')"></button><button class="pg-num" onclick="pg_numpad('0')">0</button><button class="pg-num del" onclick="pg_numpad('⌫')">⌫</button>
-        </div>
-        
-        <button class="pg-btn pg-btn-secondary" style="margin-top:6px;" onclick="pg_back()">← Back</button>
-      </div></div>
+  <div id="pg-content" style="width:100%;max-width:400px;"><div class="pg-card"><div class="pg-section">Select Profile</div><div class="pg-profile-row" onclick="pg_selectProfile('p1777837020945')">
+          <div class="pg-avatar" style="background:#F0A50022;">👨</div>
+          <div class="pg-name">Jassim</div>
+          <div class="pg-arrow">›</div>
+        </div></div>
+    <div class="pg-card">
+      <div class="pg-section">New Profile</div>
+      <input class="pg-input" id="pg-new-name" type="text" placeholder="Your name" maxlength="24">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;" id="pg-avatar-picker">
+        <button onclick="pg_pickAvatar(0)" id="pga_0" style="background: var(--cardH); border-color: rgb(240, 165, 0); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 6px 8px; font-size: 20px; cursor: pointer; transition: border-color 0.15s;">👤</button><button onclick="pg_pickAvatar(1)" id="pga_1" style="background: var(--cardH); border-color: var(--bo); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 6px 8px; font-size: 20px; cursor: pointer; transition: border-color 0.15s;">👨</button><button onclick="pg_pickAvatar(2)" id="pga_2" style="background: var(--cardH); border-color: var(--bo); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 6px 8px; font-size: 20px; cursor: pointer; transition: border-color 0.15s;">👩</button><button onclick="pg_pickAvatar(3)" id="pga_3" style="background: var(--cardH); border-color: var(--bo); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 6px 8px; font-size: 20px; cursor: pointer; transition: border-color 0.15s;">👨‍💼</button><button onclick="pg_pickAvatar(4)" id="pga_4" style="background: var(--cardH); border-color: var(--bo); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 6px 8px; font-size: 20px; cursor: pointer; transition: border-color 0.15s;">👩‍💼</button><button onclick="pg_pickAvatar(5)" id="pga_5" style="background: var(--cardH); border-color: var(--bo); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 6px 8px; font-size: 20px; cursor: pointer; transition: border-color 0.15s;">🧑</button><button onclick="pg_pickAvatar(6)" id="pga_6" style="background: var(--cardH); border-color: var(--bo); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 6px 8px; font-size: 20px; cursor: pointer; transition: border-color 0.15s;">👴</button><button onclick="pg_pickAvatar(7)" id="pga_7" style="background: var(--cardH); border-color: var(--bo); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 6px 8px; font-size: 20px; cursor: pointer; transition: border-color 0.15s;">👵</button><button onclick="pg_pickAvatar(8)" id="pga_8" style="background: var(--cardH); border-color: var(--bo); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 6px 8px; font-size: 20px; cursor: pointer; transition: border-color 0.15s;">🧔</button><button onclick="pg_pickAvatar(9)" id="pga_9" style="background: var(--cardH); border-color: var(--bo); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 6px 8px; font-size: 20px; cursor: pointer; transition: border-color 0.15s;">👱</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="pg-color-picker">
+        <button onclick="pg_pickColor(0)" id="pgc_0" style="width: 28px; height: 28px; border-radius: 50%; background: rgb(240, 165, 0); border: 3px solid rgb(255, 255, 255); cursor: pointer; transition: border-color 0.15s;"></button><button onclick="pg_pickColor(1)" id="pgc_1" style="width:28px;height:28px;border-radius:50%;background:#2ECC71;border:3px solid transparent;cursor:pointer;transition:border-color .15s;"></button><button onclick="pg_pickColor(2)" id="pgc_2" style="width:28px;height:28px;border-radius:50%;background:#3498DB;border:3px solid transparent;cursor:pointer;transition:border-color .15s;"></button><button onclick="pg_pickColor(3)" id="pgc_3" style="width:28px;height:28px;border-radius:50%;background:#E74C3C;border:3px solid transparent;cursor:pointer;transition:border-color .15s;"></button><button onclick="pg_pickColor(4)" id="pgc_4" style="width:28px;height:28px;border-radius:50%;background:#9B59B6;border:3px solid transparent;cursor:pointer;transition:border-color .15s;"></button><button onclick="pg_pickColor(5)" id="pgc_5" style="width:28px;height:28px;border-radius:50%;background:#1ABC9C;border:3px solid transparent;cursor:pointer;transition:border-color .15s;"></button><button onclick="pg_pickColor(6)" id="pgc_6" style="width:28px;height:28px;border-radius:50%;background:#E67E22;border:3px solid transparent;cursor:pointer;transition:border-color .15s;"></button><button onclick="pg_pickColor(7)" id="pgc_7" style="width:28px;height:28px;border-radius:50%;background:#F39C12;border:3px solid transparent;cursor:pointer;transition:border-color .15s;"></button>
+      </div>
+      <button class="pg-btn pg-btn-primary" onclick="pg_createProfile()">Create Profile</button>
+    </div></div>
   <div style="width:100%;max-width:400px;margin-top:8px;display:flex;gap:8px;">
-    <button onclick="pg_shareCleanApp()" style="flex:1;background:var(--cardH);border:1px solid var(--bo);border-radius:16px;padding:13px;font-size:13px;font-weight:800;color:var(--mu);cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">
+    <button onclick="openShare()" style="flex:1;background:var(--cardH);border:1px solid var(--bo);border-radius:16px;padding:13px;font-size:13px;font-weight:800;color:var(--mu);cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">
       <span style="font-size:16px;">📤</span> Share App
     </button>
+    <button onclick="pg_openAdmin()" style="background:var(--cardH);border:1px solid var(--bo);border-radius:16px;padding:13px 16px;font-size:13px;font-weight:800;color:var(--mu);cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;gap:6px;">
+      <span style="font-size:16px;">🔧</span> Admin
+    </button>
   </div>
-  <div id="pg-share-status" style="width: 100%; max-width: 400px; margin-top: 6px; font-size: 11px; color: var(--mu); text-align: center; display: block;">📥 File downloaded — send it via WhatsApp, Telegram or Email.</div>
+  <div id="pg-share-status" style="width:100%;max-width:400px;margin-top:6px;font-size:11px;color:var(--mu);text-align:center;display:none;"></div>
+</div>
+
+<!-- ══ ADMIN OVERLAY ══ -->
+<div id="pg-admin-overlay" style="display: none; position: fixed; inset: 0px; z-index: 1200; background: var(--bg); overflow-y: auto; padding-right: 16px; padding-left: 16px; padding-top: calc(20px + env(safe-area-inset-top,0px)); padding-bottom: calc(20px + env(safe-area-inset-bottom,0px));">
+  <div id="pg-admin-content" style="max-width:420px;margin:0 auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="font-size:15px;font-weight:800;color:var(--tx);font-family:Nunito,sans-serif;">🔧 Admin Panel</div>
+        <button onclick="pg_closeAdmin()" style="background:var(--cardH);border:1px solid var(--bo);border-radius:10px;padding:6px 12px;font-size:12px;color:var(--mu);cursor:pointer;font-family:'Nunito Sans',sans-serif;">✕ Close</button>
+      </div>
+      
+      <div class="pg-card" style="margin-bottom:12px;">
+        <div class="pg-section">Profiles</div>
+        
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--cardH);border-radius:13px;border:1.5px solid var(--bo);margin-bottom:8px;">
+            <div style="width:38px;height:38px;border-radius:50%;background:#F0A50022;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👨</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:800;color:var(--tx);">Jassim</div>
+              <div style="font-size:10px;color:var(--mu);">PIN: Set</div>
+            </div>
+            <button onclick="pg_adminResetPin('p1777837020945')" style="background:#F0A50022;border:1px solid #F0A50044;border-radius:10px;padding:6px 10px;font-size:11px;font-weight:800;color:#F0A500;cursor:pointer;font-family:'Nunito Sans',sans-serif;margin-right:6px;">Reset PIN</button>
+            <button onclick="pg_adminDeleteProfile('p1777837020945','Jassim')" style="background:#E74C3C22;border:1px solid #E74C3C44;border-radius:10px;padding:6px 10px;font-size:11px;font-weight:800;color:#E74C3C;cursor:pointer;font-family:'Nunito Sans',sans-serif;">🗑 Delete</button>
+          </div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-section">Admin Settings</div>
+        <button onclick="pg_adminChangePinFlow()" style="width:100%;background:var(--cardH);border:1px solid var(--bo);border-radius:13px;padding:13px;font-size:13px;font-weight:800;color:var(--tx);cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;gap:10px;margin-bottom:0;">
+          <span style="font-size:18px;">🔑</span> Change Admin PIN
+        </button>
+      </div></div>
+</div>
+<div id="pg-menu-overlay" onclick="pg_closeProfileMenu()" style="display: none; position: fixed; inset: 0px; z-index: 1200; background: rgba(0, 0, 0, 0.467); backdrop-filter: blur(4px);">
+  <div onclick="event.stopPropagation()" style="position:absolute;bottom:0;left:0;right:0;background:var(--topbar);border-radius:22px 22px 0 0;padding:20px 16px;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));max-width:500px;margin:0 auto;border:1px solid var(--bo);border-bottom:none;">
+    <div style="width:34px;height:4px;background:var(--bo);border-radius:99px;margin:0 auto 16px;"></div>
+    <div id="pg-menu-name" style="font-size:14px;font-weight:800;color:var(--tx);font-family:Nunito,sans-serif;text-align:center;margin-bottom:4px;">👨 Jassim</div>
+    <div style="font-size:11px;color:var(--mu);text-align:center;margin-bottom:18px;">Logged in</div>
+    <button onclick="pg_closeProfileMenu();pg_switchProfile();" style="width:100%;background:var(--cardH);border:1px solid var(--bo);border-radius:14px;padding:14px;margin-bottom:10px;font-size:13px;font-weight:800;color:var(--tx);cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px;">🔄</span> Switch Profile
+    </button>
+    <button onclick="pg_closeProfileMenu();pg_changePin();" style="width:100%;background:var(--cardH);border:1px solid var(--bo);border-radius:14px;padding:14px;margin-bottom:10px;font-size:13px;font-weight:800;color:var(--tx);cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px;">🔑</span> Change PIN
+    </button>
+    <button onclick="pg_closeProfileMenu();pg_logout();" style="width:100%;background:#E74C3C11;border:1px solid #E74C3C44;border-radius:14px;padding:14px;margin-bottom:0;font-size:13px;font-weight:800;color:#E74C3C;cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px;">🚪</span> Log Out
+    </button>
+  </div>
 </div>
 <nav id="bottomnav"><button class="nb on" style="flex: 1 1 0%; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; padding: 0px 4px; cursor: pointer;"><span class="ni">📊</span><span class="nl" style="color:#F0A500">Overview</span><div class="nd"></div></button><button class="nb" style="flex: 1 1 0%; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; padding: 0px 4px; cursor: pointer;"><span class="ni">💰</span><span class="nl" style="color:#7F8C8D">Spending</span></button><button class="nb" style="flex: 1 1 0%; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; padding: 0px 4px; cursor: pointer;"><span class="ni">📋</span><span class="nl" style="color:#7F8C8D">Payments</span></button><button class="nb" style="flex: 1 1 0%; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; padding: 0px 4px; cursor: pointer;"><span class="ni">🏦</span><span class="nl" style="color:#7F8C8D">Funds</span></button></nav>
 
@@ -6655,7 +6710,7 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
 </div>
 
 <!-- SHARE SHEET OVERLAY -->
-<div id="shareoverlay" style="display: block; position: fixed; inset: 0px; z-index: 400; background: var(--sh);" onclick="closeShare()">
+<div id="shareoverlay" style="display: block; position: fixed; inset: 0px; z-index: 1100; background: var(--sh);" onclick="closeShare()">
   <div id="sharesheet" onclick="event.stopPropagation()" style="position: absolute; bottom: 0px; left: 0px; right: 0px; background: var(--topbar); border-radius: 24px 24px 0px 0px; padding-top: 24px; padding-right: 20px; padding-left: 20px; padding-bottom: calc(28px + env(safe-area-inset-bottom,0px)); max-width: 540px; margin: 0px auto; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(0px);">
 
     <!-- Handle bar -->
@@ -6768,7 +6823,7 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
           <div style="font-size:16px;font-weight:900;color:#ECF0F1;font-family:Nunito,sans-serif;margin-bottom:6px;">Publishing to GitHub Pages…</div>
           <div style="font-size:12px;color:#7F8C8D;line-height:1.6;" id="sb-loading-msg">Creating repo &amp; uploading your app. Takes ~20 seconds.</div>
           <div style="margin:20px auto 0;width:200px;height:5px;background:#243447;border-radius:99px;overflow:hidden;">
-            <div id="sb-progress-bar" style="height: 100%; width: 21.9656%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
+            <div id="sb-progress-bar" style="height: 100%; width: 27.3337%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
           </div>
         </div>
       </div>
@@ -8593,10 +8648,16 @@ document.addEventListener("keydown", e => {
     if(!name){nameEl?.focus();return;}
     const profiles=getProfiles();
     const id="p"+Date.now();
-    profiles.push({id,name,avatar:AVATARS[_selAvatar],color:COLORS[_selColor],hasPin:false,pinHash:""});
+    /* Default PIN is 0000 — user can change it later via avatar menu */
+    profiles.push({id,name,avatar:AVATARS[_selAvatar],color:COLORS[_selColor],hasPin:true,pinHash:hashPin("0000")});
     saveProfiles(profiles);
-    /* Ask if they want to set a PIN */
-    renderSetPin(id,false);
+    /* Show confirmation then go back to list */
+    content.innerHTML=`<div class="pg-card" style="text-align:center;padding:28px 20px;">
+      <div style="font-size:40px;margin-bottom:10px;">${AVATARS[_selAvatar]}</div>
+      <div style="font-size:16px;font-weight:800;color:var(--tx);margin-bottom:6px;">${name}</div>
+      <div style="font-size:12px;color:var(--mu);margin-bottom:16px;line-height:1.7;">Profile created!<br>Default PIN is <b style="color:#F0A500;font-size:16px;letter-spacing:4px;">0000</b><br><span style="font-size:11px;">Change it anytime via the avatar button in the top bar.</span></div>
+      <button class="pg-btn pg-btn-primary" onclick="renderProfileList()">Continue →</button>
+    </div>`;
   };
 
   function renderSetPin(profileId,required){
@@ -8699,6 +8760,196 @@ document.addEventListener("keydown", e => {
     if(avEl&&activeP) avEl.textContent=activeP.avatar;
     if(nmEl&&activeP) nmEl.textContent=activeP.name;
   }
+
+  /* Profile menu (topbar avatar tap) */
+  window.pg_openProfileMenu=function(){
+    const activeId=localStorage.getItem(SEL_KEY);
+    if(!activeId) return; /* not logged in — nothing to show */
+    const profiles=getProfiles();
+    const p=profiles.find(x=>x.id===activeId);
+    const nm=document.getElementById("pg-menu-name");
+    if(nm&&p) nm.textContent=(p.avatar||"")+" "+p.name;
+    document.getElementById("pg-menu-overlay").style.display="block";
+  };
+  window.pg_closeProfileMenu=function(){
+    document.getElementById("pg-menu-overlay").style.display="none";
+  };
+
+  /* ══ ADMIN SYSTEM ══ */
+  const ADMIN_PIN_KEY="hbt_admin_pin";
+  function getAdminPinHash(){ return localStorage.getItem(ADMIN_PIN_KEY)||hashPin("0000"); }
+  function saveAdminPinHash(h){ localStorage.setItem(ADMIN_PIN_KEY,h); }
+
+  let _adminPinBuffer="";
+  let _adminPinMode="login"; /* "login" | "change_old" | "change_new" */
+
+  window.pg_openAdmin=function(){
+    const overlay=document.getElementById("pg-admin-overlay");
+    overlay.style.display="block";
+    _adminPinMode="login";
+    _renderAdminPin("Enter Admin PIN","Enter PIN to access Admin panel");
+  };
+  window.pg_closeAdmin=function(){
+    document.getElementById("pg-admin-overlay").style.display="none";
+  };
+
+  function _renderAdminPin(title,sub){
+    _adminPinBuffer="";
+    const ac=document.getElementById("pg-admin-content");
+    ac.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="font-size:15px;font-weight:800;color:var(--tx);font-family:Nunito,sans-serif;">${title}</div>
+        <button onclick="pg_closeAdmin()" style="background:var(--cardH);border:1px solid var(--bo);border-radius:10px;padding:6px 12px;font-size:12px;color:var(--mu);cursor:pointer;font-family:'Nunito Sans',sans-serif;">✕ Close</button>
+      </div>
+      <div class="pg-card" style="text-align:center;">
+        <div style="font-size:13px;color:var(--mu);margin-bottom:16px;">${sub}</div>
+        <div class="pg-pin-row" id="adm-pin-dots">
+          ${[0,1,2,3].map(i=>`<div class="pg-pin-dot" id="adpd_${i}"></div>`).join("")}
+        </div>
+        <div id="adm-pin-err" style="font-size:11px;color:#E74C3C;min-height:16px;margin-bottom:6px;"></div>
+        <div class="pg-numpad">
+          ${[1,2,3,4,5,6,7,8,9,"","0","⌫"].map(k=>`<button class="pg-num${k==="⌫"?" del":""}" onclick="pg_adminNumpad('${k}')">${k}</button>`).join("")}
+        </div>
+      </div>`;
+  }
+
+  window.pg_adminNumpad=function(k){
+    if(k==="⌫"||k==="") _adminPinBuffer=_adminPinBuffer.slice(0,-1);
+    else if(_adminPinBuffer.length<4) _adminPinBuffer+=k;
+    for(let i=0;i<4;i++){
+      const d=document.getElementById("adpd_"+i);
+      if(d) d.classList.toggle("filled",i<_adminPinBuffer.length);
+    }
+    if(_adminPinBuffer.length===4) setTimeout(_adminPinSubmit,120);
+  };
+
+  let _adminNewPinTemp="";
+  function _adminPinSubmit(){
+    const errEl=document.getElementById("adm-pin-err");
+    if(_adminPinMode==="login"){
+      if(hashPin(_adminPinBuffer)===getAdminPinHash()){
+        _renderAdminPanel();
+      } else {
+        _adminPinBuffer="";
+        for(let i=0;i<4;i++){const d=document.getElementById("adpd_"+i);if(d)d.classList.remove("filled");}
+        if(errEl) errEl.textContent="Wrong PIN — try again";
+      }
+    } else if(_adminPinMode==="change_old"){
+      if(hashPin(_adminPinBuffer)===getAdminPinHash()){
+        _adminPinMode="change_new";
+        _renderAdminPin("New Admin PIN","Enter your new 4-digit PIN");
+      } else {
+        _adminPinBuffer="";
+        for(let i=0;i<4;i++){const d=document.getElementById("adpd_"+i);if(d)d.classList.remove("filled");}
+        if(errEl) errEl.textContent="Wrong current PIN";
+      }
+    } else if(_adminPinMode==="change_new"){
+      _adminNewPinTemp=_adminPinBuffer;
+      _adminPinMode="change_confirm";
+      _renderAdminPin("Confirm New PIN","Enter your new PIN again to confirm");
+    } else if(_adminPinMode==="change_confirm"){
+      if(_adminPinBuffer===_adminNewPinTemp){
+        saveAdminPinHash(hashPin(_adminPinBuffer));
+        _adminNewPinTemp="";
+        _renderAdminPanel(true);
+      } else {
+        _adminPinBuffer="";
+        for(let i=0;i<4;i++){const d=document.getElementById("adpd_"+i);if(d)d.classList.remove("filled");}
+        if(errEl) errEl.textContent="PINs don't match — try again";
+        _adminPinMode="change_new";
+        setTimeout(()=>_renderAdminPin("New Admin PIN","Enter your new 4-digit PIN"),600);
+      }
+    }
+  }
+
+  function _renderAdminPanel(pinChanged){
+    const profiles=getProfiles();
+    const ac=document.getElementById("pg-admin-content");
+    let profileRows=profiles.length
+      ? profiles.map(p=>`
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--cardH);border-radius:13px;border:1.5px solid var(--bo);margin-bottom:8px;">
+            <div style="width:38px;height:38px;border-radius:50%;background:${p.color}22;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${p.avatar}</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:800;color:var(--tx);">${p.name}</div>
+              <div style="font-size:10px;color:var(--mu);">PIN: ${p.hasPin?"Set":"None"}</div>
+            </div>
+            <button onclick="pg_adminResetPin('${p.id}')" style="background:#F0A50022;border:1px solid #F0A50044;border-radius:10px;padding:6px 10px;font-size:11px;font-weight:800;color:#F0A500;cursor:pointer;font-family:'Nunito Sans',sans-serif;margin-right:6px;">Reset PIN</button>
+            <button onclick="pg_adminDeleteProfile('${p.id}','${p.name}')" style="background:#E74C3C22;border:1px solid #E74C3C44;border-radius:10px;padding:6px 10px;font-size:11px;font-weight:800;color:#E74C3C;cursor:pointer;font-family:'Nunito Sans',sans-serif;">🗑 Delete</button>
+          </div>`).join("")
+      : `<div style="text-align:center;padding:20px;color:var(--mu);font-size:13px;">No profiles yet.</div>`;
+
+    ac.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="font-size:15px;font-weight:800;color:var(--tx);font-family:Nunito,sans-serif;">🔧 Admin Panel</div>
+        <button onclick="pg_closeAdmin()" style="background:var(--cardH);border:1px solid var(--bo);border-radius:10px;padding:6px 12px;font-size:12px;color:var(--mu);cursor:pointer;font-family:'Nunito Sans',sans-serif;">✕ Close</button>
+      </div>
+      ${pinChanged?`<div style="background:#2ECC7122;border:1px solid #2ECC7144;border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#2ECC71;font-weight:700;">✅ Admin PIN changed successfully!</div>`:""}
+      <div class="pg-card" style="margin-bottom:12px;">
+        <div class="pg-section">Profiles</div>
+        ${profileRows}
+      </div>
+      <div class="pg-card">
+        <div class="pg-section">Admin Settings</div>
+        <button onclick="pg_adminChangePinFlow()" style="width:100%;background:var(--cardH);border:1px solid var(--bo);border-radius:13px;padding:13px;font-size:13px;font-weight:800;color:var(--tx);cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;gap:10px;margin-bottom:0;">
+          <span style="font-size:18px;">🔑</span> Change Admin PIN
+        </button>
+      </div>`;
+  }
+
+  window.pg_adminChangePinFlow=function(){
+    _adminPinMode="change_old";
+    _renderAdminPin("Change Admin PIN","Enter your current Admin PIN");
+  };
+
+  window.pg_adminResetPin=function(profileId){
+    const profiles=getProfiles();
+    const idx=profiles.findIndex(p=>p.id===profileId);
+    if(idx===-1) return;
+    profiles[idx].hasPin=true;
+    profiles[idx].pinHash=hashPin("0000");
+    saveProfiles(profiles);
+    _renderAdminPanel();
+  };
+
+  window.pg_adminDeleteProfile=function(profileId,name){
+    if(!confirm("Delete profile \""+name+"\"? All their data will be lost.")) return;
+    let profiles=getProfiles();
+    profiles=profiles.filter(p=>p.id!==profileId);
+    saveProfiles(profiles);
+    /* Also clear stored data for this profile */
+    const keys=["hbt_cats","hbt_exp","hbt_lang","hbt_budget","hbt_noh","hbt_funds","hbt_sync_cfg","hbt_theme"];
+    keys.forEach(k=>{try{localStorage.removeItem(PFX+profileId+"_"+k);}catch(e){}});
+    /* If deleting active profile, log out */
+    if(localStorage.getItem(SEL_KEY)===profileId){
+      localStorage.removeItem(SEL_KEY);
+      pg_closeAdmin();
+      gate.classList.remove("hidden");
+      renderProfileList();
+      return;
+    }
+    _renderAdminPanel();
+  };
+
+  /* Change PIN for currently logged-in profile */
+  window.pg_changePin=function(){
+    const activeId=localStorage.getItem(SEL_KEY);
+    if(!activeId) return;
+    /* Show gate briefly to render the PIN set screen */
+    const activeProfile=getProfiles().find(p=>p.id===activeId);
+    if(!activeProfile) return;
+    /* Save current data first */
+    saveProfileData(activeId);
+    /* Temporarily remove PIN so renderSetPin shows "set" mode */
+    const profiles=getProfiles();
+    const idx=profiles.findIndex(p=>p.id===activeId);
+    if(idx===-1) return;
+    profiles[idx].hasPin=false;
+    profiles[idx].pinHash="";
+    saveProfiles(profiles);
+    /* Show gate with PIN set screen */
+    gate.classList.remove("hidden");
+    renderSetPin(activeId,false);
+  };
 
   /* Expose switch-profile button for topbar */
   window.pg_switchProfile=function(){
