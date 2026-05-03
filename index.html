@@ -14,7 +14,7 @@ const _m={name:"House Budget Tracker",short_name:"HouseTracker",start_url:"./",d
         {src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230F1923'/%3E%3Ctext y='420' x='20' font-size='440'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
 const _mb=new Blob([JSON.stringify(_m)],{type:"application/json"});
 const _ml=document.createElement("link");_ml.rel="manifest";_ml.href=URL.createObjectURL(_mb);document.head.appendChild(_ml);
-</script><link rel="manifest" href="blob:null/b4c8a02a-5041-483c-bbbc-69b3e0c317d8"><link rel="manifest" href="blob:https://jbushehab-hub.github.io/ad6ef73e-5757-4be8-814e-975bd9d3ec2b"><link rel="manifest" href="blob:null/fd695ae9-75b7-4b8c-929c-3691a55578b1">
+</script><link rel="manifest" href="blob:null/a46afe92-c6d1-42b2-be8b-a16ef4c012b4"><link rel="manifest" href="blob:https://jbushehab-hub.github.io/ad6ef73e-5757-4be8-814e-975bd9d3ec2b"><link rel="manifest" href="blob:null/fd695ae9-75b7-4b8c-929c-3691a55578b1">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&amp;family=Nunito+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
 <style>
 /* ── CSS Variables: Dark & Light Mode ── */
@@ -2151,6 +2151,7 @@ function App(_ref16) {
     };
     syncRef.current._startAttSync(dbUrl, room);
     syncRef.current.start();
+    if(window._startProfileSync) window._startProfileSync(dbUrl, room);
     setSyncUI(true, room);
   };
 
@@ -2170,6 +2171,14 @@ function App(_ref16) {
       }
       /* Push attachments separately to their own node */
       _pushAttsToFirebase();
+      /* Push local profiles so other devices can see them */
+      try{
+        var _lp=JSON.parse(localStorage.getItem("hbt_profiles")||"[]");
+        if(_lp.length){
+          var _pu=dbUrl.replace(/\/+$/,"")+"/rooms/"+room+"/profiles.json";
+          fetch(_pu,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(_lp)}).catch(function(){});
+        }
+      }catch(_ex){}
     }, 500);
   };
   window._getSyncRef = function () {
@@ -4036,6 +4045,7 @@ function App(_ref16) {
     };
     syncRef.current._startAttSync(dbUrl, room);
     syncRef.current.start();
+    if(window._startProfileSync) window._startProfileSync(dbUrl, room);
     setSyncUI(true, room);
   };
 
@@ -4055,6 +4065,14 @@ function App(_ref16) {
       }
       /* Push attachments separately to their own node */
       _pushAttsToFirebase();
+      /* Push local profiles so other devices can see them */
+      try{
+        var _lp=JSON.parse(localStorage.getItem("hbt_profiles")||"[]");
+        if(_lp.length){
+          var _pu=dbUrl.replace(/\/+$/,"")+"/rooms/"+room+"/profiles.json";
+          fetch(_pu,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(_lp)}).catch(function(){});
+        }
+      }catch(_ex){}
     }, 500);
   };
   window._getSyncRef = function () {
@@ -6809,7 +6827,7 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
           <div style="font-size:16px;font-weight:900;color:#ECF0F1;font-family:Nunito,sans-serif;margin-bottom:6px;">Publishing to GitHub Pages…</div>
           <div style="font-size:12px;color:#7F8C8D;line-height:1.6;" id="sb-loading-msg">Creating repo &amp; uploading your app. Takes ~20 seconds.</div>
           <div style="margin:20px auto 0;width:200px;height:5px;background:#243447;border-radius:99px;overflow:hidden;">
-            <div id="sb-progress-bar" style="height: 100%; width: 30.8629%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
+            <div id="sb-progress-bar" style="height: 100%; width: 27.1411%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
           </div>
         </div>
       </div>
@@ -8579,7 +8597,69 @@ document.addEventListener("keydown", e => {
   }
   function saveProfiles(list){
     try{localStorage.setItem("hbt_profiles",JSON.stringify(list));}catch(e){}
+    /* Push profiles to Firebase if sync is active */
+    _pushProfilesToFirebase(list);
   }
+
+  /* ── Push profiles to Firebase ── */
+  function _pushProfilesToFirebase(list){
+    try{
+      const cfg=JSON.parse(localStorage.getItem("hbt_sync_cfg")||"null");
+      if(!cfg||!cfg.dbUrl||!cfg.room) return;
+      const url=cfg.dbUrl.replace(/\/+$/,"")+"/rooms/"+cfg.room+"/profiles.json";
+      /* Strip pinHash before sending — keep privacy, send only id/name/avatar/color/hasPin */
+      const safe=list.map(p=>({id:p.id,name:p.name,avatar:p.avatar,color:p.color,hasPin:p.hasPin,pinHash:p.pinHash}));
+      fetch(url,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(safe)}).catch(()=>{});
+    }catch(e){}
+  }
+
+  /* ── Pull profiles from Firebase and merge ── */
+  function _mergeRemoteProfiles(remoteList){
+    if(!Array.isArray(remoteList)||!remoteList.length) return;
+    const local=getProfiles();
+    let changed=false;
+    remoteList.forEach(rp=>{
+      const existing=local.find(lp=>lp.id===rp.id);
+      if(!existing){
+        /* New profile from another device — add it */
+        local.push(rp);
+        changed=true;
+      } else {
+        /* Update name/avatar/color if changed remotely, but keep local pinHash */
+        if(existing.name!==rp.name||existing.avatar!==rp.avatar||existing.color!==rp.color){
+          existing.name=rp.name;existing.avatar=rp.avatar;existing.color=rp.color;
+          changed=true;
+        }
+      }
+    });
+    if(changed){
+      try{localStorage.setItem("hbt_profiles",JSON.stringify(local));}catch(e){}
+      /* If gate is visible, re-render profile list */
+      const gate=document.getElementById("profileGate");
+      if(gate&&!gate.classList.contains("hidden")) renderProfileList();
+    }
+  }
+
+  /* ── Start listening to remote profile changes ── */
+  function _startProfileSync(dbUrl,room){
+    try{
+      const url=dbUrl.replace(/\/+$/,"")+"/rooms/"+room+"/profiles.json";
+      /* One-time fetch first */
+      fetch(url).then(r=>r.json()).then(data=>{if(Array.isArray(data))_mergeRemoteProfiles(data);}).catch(()=>{});
+      /* Then SSE for live updates */
+      if(window._profileEs) try{window._profileEs.close();}catch(e){}
+      window._profileEs=new EventSource(url);
+      window._profileEs.addEventListener("put",function(e){
+        try{const d=JSON.parse(e.data);if(d&&Array.isArray(d.data))_mergeRemoteProfiles(d.data);}catch(err){}
+      });
+      window._profileEs.onerror=function(){
+        setTimeout(()=>_startProfileSync(dbUrl,room),4000);
+      };
+    }catch(e){}
+  }
+
+  /* Expose so App can call it after Firebase sync starts */
+  window._startProfileSync=_startProfileSync;
   function getProfileData(id){
     const keys=["hbt_cats","hbt_exp","hbt_lang","hbt_budget","hbt_noh","hbt_funds","hbt_sync_cfg","hbt_theme"];
     const data={};
@@ -9037,6 +9117,14 @@ document.addEventListener("keydown", e => {
   }
 
   /* ── Boot ── */
+  /* Start profile sync immediately if Firebase already configured */
+  try{
+    const _sc=JSON.parse(localStorage.getItem("hbt_sync_cfg")||"null");
+    if(_sc&&_sc.dbUrl&&_sc.room){
+      setTimeout(()=>{if(window._startProfileSync)window._startProfileSync(_sc.dbUrl,_sc.room);},800);
+    }
+  }catch(e){}
+
   const autoProfile=localStorage.getItem(SEL_KEY);
   if(autoProfile){
     const profiles=getProfiles();
