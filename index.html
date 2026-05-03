@@ -14,7 +14,7 @@ const _m={name:"House Budget Tracker",short_name:"HouseTracker",start_url:"./",d
         {src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230F1923'/%3E%3Ctext y='420' x='20' font-size='440'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
 const _mb=new Blob([JSON.stringify(_m)],{type:"application/json"});
 const _ml=document.createElement("link");_ml.rel="manifest";_ml.href=URL.createObjectURL(_mb);document.head.appendChild(_ml);
-</script><link rel="manifest" href="blob:null/2604bde8-6f02-4319-b772-42104669a719"><link rel="manifest" href="blob:https://jbushehab-hub.github.io/ad6ef73e-5757-4be8-814e-975bd9d3ec2b"><link rel="manifest" href="blob:null/fd695ae9-75b7-4b8c-929c-3691a55578b1">
+</script><link rel="manifest" href="blob:null/b4c8a02a-5041-483c-bbbc-69b3e0c317d8"><link rel="manifest" href="blob:https://jbushehab-hub.github.io/ad6ef73e-5757-4be8-814e-975bd9d3ec2b"><link rel="manifest" href="blob:null/fd695ae9-75b7-4b8c-929c-3691a55578b1">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&amp;family=Nunito+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
 <style>
 /* ── CSS Variables: Dark & Light Mode ── */
@@ -6809,7 +6809,7 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
           <div style="font-size:16px;font-weight:900;color:#ECF0F1;font-family:Nunito,sans-serif;margin-bottom:6px;">Publishing to GitHub Pages…</div>
           <div style="font-size:12px;color:#7F8C8D;line-height:1.6;" id="sb-loading-msg">Creating repo &amp; uploading your app. Takes ~20 seconds.</div>
           <div style="margin:20px auto 0;width:200px;height:5px;background:#243447;border-radius:99px;overflow:hidden;">
-            <div id="sb-progress-bar" style="height: 100%; width: 23.0024%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
+            <div id="sb-progress-bar" style="height: 100%; width: 30.8629%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
           </div>
         </div>
       </div>
@@ -7865,10 +7865,28 @@ async function startGitHubDeploy() {
   if (bar) bar.style.width = "0%";
   _animProgress(20, 1500);
 
+  /* Helper: safely encode large HTML to base64 */
+  function htmlToBase64(str) {
+    try {
+      const bytes = new TextEncoder().encode(str);
+      let bin = "";
+      const chunk = 8192;
+      for (let i = 0; i < bytes.length; i += chunk) {
+        bin += String.fromCharCode(...bytes.subarray(i, i + chunk));
+      }
+      return btoa(bin);
+    } catch(e) {
+      // Fallback
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+  }
+
   try {
     /* Step 1: Get username */
     const userResp = await fetch("https://api.github.com/user", { headers });
-    if (!userResp.ok) throw new Error("Auth failed (" + userResp.status + ") — check your token has public_repo scope.");
+    if (userResp.status === 401) throw new Error("Token invalid or expired — please reset and use a new token.");
+    if (userResp.status === 403) throw new Error("Token lacks permissions — make sure public_repo scope is checked.");
+    if (!userResp.ok) throw new Error("GitHub auth failed (" + userResp.status + "). Check your token.");
     const user = await userResp.json();
     const username = user.login;
 
@@ -7886,19 +7904,21 @@ async function startGitHubDeploy() {
         method: "POST", headers,
         body: JSON.stringify({ name: repoName, private: false, auto_init: true, description: "House Building Budget Tracker" })
       });
-      if (!repoResp.ok) throw new Error("Could not create repo (" + repoResp.status + ").");
-      await new Promise(r => setTimeout(r, 2000)); // wait for GitHub to init
+      if (!repoResp.ok) {
+        const errBody = await repoResp.json().catch(() => ({}));
+        throw new Error("Could not create repo: " + (errBody.message || repoResp.status));
+      }
+      await new Promise(r => setTimeout(r, 2500));
     }
     cfg.repoName = repoName;
     localStorage.setItem("hbt_github", JSON.stringify(cfg));
 
     _animProgress(55, 1200);
 
-    /* Step 3: Upload index.html (base64 encoded) */
+    /* Step 3: Upload index.html */
     const html = document.documentElement.outerHTML;
-    const b64 = btoa(unescape(encodeURIComponent(html)));
+    const b64 = htmlToBase64(html);
 
-    // Check if file already exists (need SHA to update)
     let sha = undefined;
     const existResp = await fetch("https://api.github.com/repos/" + username + "/" + repoName + "/contents/index.html", { headers });
     if (existResp.ok) { const existData = await existResp.json(); sha = existData.sha; }
@@ -7908,7 +7928,10 @@ async function startGitHubDeploy() {
     const uploadResp = await fetch("https://api.github.com/repos/" + username + "/" + repoName + "/contents/index.html", {
       method: "PUT", headers, body: JSON.stringify(fileBody)
     });
-    if (!uploadResp.ok) throw new Error("File upload failed (" + uploadResp.status + ").");
+    if (!uploadResp.ok) {
+      const errBody = await uploadResp.json().catch(() => ({}));
+      throw new Error("File upload failed: " + (errBody.message || uploadResp.status));
+    }
 
     _animProgress(80, 1000);
 
@@ -7919,7 +7942,10 @@ async function startGitHubDeploy() {
         method: "POST", headers,
         body: JSON.stringify({ source: { branch: "main", path: "/" } })
       });
-      if (!pagesResp.ok && pagesResp.status !== 409) throw new Error("Pages setup failed (" + pagesResp.status + ").");
+      if (!pagesResp.ok && pagesResp.status !== 409) {
+        const errBody = await pagesResp.json().catch(() => ({}));
+        throw new Error("Pages setup failed: " + (errBody.message || pagesResp.status));
+      }
     }
 
     _animProgress(100, 600);
@@ -7940,7 +7966,7 @@ async function startGitHubDeploy() {
   } catch(e) {
     console.warn("GitHub Pages deploy error:", e);
     const errMsg = document.getElementById("sb-error-msg");
-    if (errMsg) errMsg.textContent = (e.message || "Unknown error") + " — Check token & connection.";
+    if (errMsg) errMsg.textContent = e.message || "Unknown error. Check token & internet connection.";
     showSandboxPanel("error");
   }
 }
