@@ -14,7 +14,7 @@ const _m={name:"House Budget Tracker",short_name:"HouseTracker",start_url:"./",d
         {src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230F1923'/%3E%3Ctext y='420' x='20' font-size='440'%3E%F0%9F%8F%A1%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
 const _mb=new Blob([JSON.stringify(_m)],{type:"application/json"});
 const _ml=document.createElement("link");_ml.rel="manifest";_ml.href=URL.createObjectURL(_mb);document.head.appendChild(_ml);
-</script><link rel="manifest" href="blob:null/669043f7-ce43-4e89-ad8f-acdbf95292d9"><link rel="manifest" href="blob:https://jbushehab-hub.github.io/ad6ef73e-5757-4be8-814e-975bd9d3ec2b"><link rel="manifest" href="blob:null/fd695ae9-75b7-4b8c-929c-3691a55578b1">
+</script><link rel="manifest" href="blob:null/0946ce10-282c-40ac-85bb-315e40c6a70a"><link rel="manifest" href="blob:https://jbushehab-hub.github.io/ad6ef73e-5757-4be8-814e-975bd9d3ec2b"><link rel="manifest" href="blob:null/fd695ae9-75b7-4b8c-929c-3691a55578b1">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&amp;family=Nunito+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
 <style>
 /* ── CSS Variables: Dark & Light Mode ── */
@@ -6720,14 +6720,30 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
 </div>
 
 <!-- SHARE SHEET OVERLAY -->
-<div id="shareoverlay" style="display: block; position: fixed; inset: 0px; z-index: 1100; background: var(--sh);" onclick="closeShare()">
-  <div id="sharesheet" onclick="event.stopPropagation()" style="position: absolute; bottom: 0px; left: 0px; right: 0px; background: var(--topbar); border-radius: 24px 24px 0px 0px; padding-top: 24px; padding-right: 20px; padding-left: 20px; padding-bottom: calc(28px + env(safe-area-inset-bottom,0px)); max-width: 540px; margin: 0px auto; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(0px);">
+<div id="shareoverlay" style="display: none; position: fixed; inset: 0px; z-index: 1100; background: var(--sh);" onclick="closeShare()">
+  <div id="sharesheet" onclick="event.stopPropagation()" style="position: absolute; bottom: 0px; left: 0px; right: 0px; background: var(--topbar); border-radius: 24px 24px 0px 0px; padding-top: 24px; padding-right: 20px; padding-left: 20px; padding-bottom: calc(28px + env(safe-area-inset-bottom,0px)); max-width: 540px; margin: 0px auto; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(100%);">
+<script>
+/* Force-hide share overlay immediately — runs before anything else */
+(function(){
+  var ov=document.getElementById("shareoverlay");
+  var sh=document.getElementById("sharesheet");
+  if(ov){ov.style.display="none";}
+  if(sh){sh.style.transform="translateY(100%)";}
+  /* Also reset all inner panels to default state */
+  var ids=["share-main","share-sandbox","sb-setup","sb-loading","sb-success","sb-error"];
+  var defaults={  "share-main":"block","share-sandbox":"none","sb-setup":"none","sb-loading":"none","sb-success":"none","sb-error":"none"};
+  ids.forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.style.display=defaults[id]||"none";
+  });
+})();
+</script>
 
     <!-- Handle bar -->
     <div style="width:40px;height:4px;background:#243447;border-radius:99px;margin:0 auto 20px;"></div>
 
     <!-- ── PANEL 1: MAIN OPTIONS ── -->
-    <div id="share-main" style="display: none;">
+    <div id="share-main" style="display: block;">
       <div style="font-size:11px;font-weight:700;color:#F0A500;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">Share This App</div>
       <div style="font-size:19px;font-weight:900;color:#ECF0F1;font-family:Nunito,sans-serif;margin-bottom:6px;">📤 Send to a Friend</div>
       <div style="font-size:12px;color:#7F8C8D;margin-bottom:20px;line-height:1.6;">Send a link, or publish to the web so anyone can install it on their phone.</div>
@@ -6778,7 +6794,7 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
     </div>
 
     <!-- ── PANEL 2: GITHUB PAGES DEPLOY FLOW ── -->
-    <div id="share-sandbox" style="display: block;">
+    <div id="share-sandbox" style="display: none;">
 
       <!-- SETUP STATE: no token yet -->
       <div id="sb-setup" style="display: none;">
@@ -6827,19 +6843,19 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
       </div>
 
       <!-- LOADING STATE -->
-      <div id="sb-loading" style="display: block;">
+      <div id="sb-loading" style="display: none;">
         <div style="text-align:center;padding:24px 0 16px;">
           <div style="font-size:44px;margin-bottom:14px;">🌐</div>
           <div style="font-size:16px;font-weight:900;color:#ECF0F1;font-family:Nunito,sans-serif;margin-bottom:6px;">Publishing to GitHub Pages…</div>
           <div style="font-size:12px;color:#7F8C8D;line-height:1.6;" id="sb-loading-msg">Creating repo &amp; uploading your app. Takes ~20 seconds.</div>
           <div style="margin:20px auto 0;width:200px;height:5px;background:#243447;border-radius:99px;overflow:hidden;">
-            <div id="sb-progress-bar" style="height: 100%; width: 18.0851%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
+            <div id="sb-progress-bar" style="height: 100%; width: 25.7278%; background: linear-gradient(90deg, rgb(0, 199, 183), rgb(0, 173, 159)); border-radius: 99px; transition: width 0.4s;"></div>
           </div>
         </div>
       </div>
 
       <!-- SUCCESS STATE -->
-      <div id="sb-success" style="display:none;">
+      <div id="sb-success" style="display: none;">
         <div style="font-size:11px;font-weight:700;color:#6E40C9;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">Live on GitHub Pages 🎉</div>
         <div style="font-size:17px;font-weight:900;color:#ECF0F1;font-family:Nunito,sans-serif;margin-bottom:6px;">📱 Scan to Install</div>
         <div style="font-size:11px;color:#7F8C8D;margin-bottom:14px;">⏱ Page goes live in ~1 min after first publish.</div>
@@ -6847,14 +6863,14 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
         <!-- QR Code -->
         <div style="display:flex;justify-content:center;margin-bottom:14px;">
           <div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;">
-            <img id="sb-qr" src="" alt="QR Code" style="width:160px;height:160px;display:block;border-radius:6px;">
+            <img id="sb-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&amp;data=https%3A%2F%2Fjbushehab-hub.github.io%2Fhouse-budget-7jv7v%2F&amp;margin=6" alt="QR Code" style="width:160px;height:160px;display:block;border-radius:6px;">
           </div>
         </div>
 
         <!-- URL Copy Row -->
         <div style="display:flex;gap:8px;margin-bottom:12px;">
-          <div id="sb-url-box" style="flex:1;background:#0F1923;border:1px solid #243447;border-radius:12px;padding:10px 14px;font-size:11px;color:#00C7B7;font-family:'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
-          <button onclick="copySandboxUrl()" id="sb-copy-btn" style="background:#00C7B7;border:none;border-radius:12px;padding:10px 16px;color:#000;font-weight:800;font-size:12px;cursor:pointer;flex-shrink:0;font-family:'Nunito Sans',sans-serif;">Copy</button>
+          <div id="sb-url-box" style="flex:1;background:#0F1923;border:1px solid #243447;border-radius:12px;padding:10px 14px;font-size:11px;color:#00C7B7;font-family:'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">https://jbushehab-hub.github.io/house-budget-7jv7v/</div>
+          <button onclick="copySandboxUrl()" id="sb-copy-btn" style="background: rgb(110, 64, 201); border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; border-radius: 12px; padding: 10px 16px; color: rgb(0, 0, 0); font-weight: 800; font-size: 12px; cursor: pointer; flex-shrink: 0; font-family: &quot;Nunito Sans&quot;, sans-serif;">Copy</button>
         </div>
 
         <!-- Share via WA / Email -->
@@ -6866,10 +6882,10 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
         <!-- Install Instructions -->
         <div style="background:#1A2637;border-radius:16px;padding:14px;margin-bottom:12px;border:1px solid #243447;">
           <div style="display:flex;gap:6px;margin-bottom:12px;">
-            <button onclick="showInstallTab('android')" id="tab-android" style="flex:1;background:#25D366;border:none;border-radius:10px;padding:7px;color:#000;font-weight:800;font-size:11px;cursor:pointer;font-family:'Nunito Sans',sans-serif;">🤖 Android</button>
-            <button onclick="showInstallTab('ios')" id="tab-ios" style="flex:1;background:#243447;border:none;border-radius:10px;padding:7px;color:#7F8C8D;font-weight:800;font-size:11px;cursor:pointer;font-family:'Nunito Sans',sans-serif;">🍎 iPhone / iPad</button>
+            <button onclick="showInstallTab('android')" id="tab-android" style="flex: 1 1 0%; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; border-radius: 10px; padding: 7px; font-weight: 800; font-size: 11px; cursor: pointer; font-family: &quot;Nunito Sans&quot;, sans-serif; background: rgb(37, 211, 102); color: rgb(0, 0, 0);">🤖 Android</button>
+            <button onclick="showInstallTab('ios')" id="tab-ios" style="flex: 1 1 0%; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; border-radius: 10px; padding: 7px; font-weight: 800; font-size: 11px; cursor: pointer; font-family: &quot;Nunito Sans&quot;, sans-serif; background: rgb(36, 52, 71); color: rgb(127, 140, 141);">🍎 iPhone / iPad</button>
           </div>
-          <div id="install-android">
+          <div id="install-android" style="display: block;">
             <div style="font-size:11px;color:#7F8C8D;line-height:1.9;">
               <b style="color:#ECF0F1;">1.</b> Open link in <b style="color:#25D366;">Chrome</b><br>
               <b style="color:#ECF0F1;">2.</b> Tap <b style="color:#ECF0F1;">⋮ menu</b> (top-right)<br>
@@ -6886,10 +6902,11 @@ ReactDOM.createRoot(document.getElementById("screen")).render( /*#__PURE__*/Reac
         </div>
 
         <!-- Reset token link -->
-        <div style="display:flex;gap:8px;">
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
           <button onclick="showSandboxPanel('main')" style="flex:1;background:#1E2E42;border:none;border-radius:12px;padding:11px;color:#7F8C8D;font-weight:700;font-size:12px;cursor:pointer;font-family:'Nunito Sans',sans-serif;">← Back</button>
           <button onclick="resetGitHub()" style="flex:1;background:#1E2E42;border:none;border-radius:12px;padding:11px;color:#E74C3C;font-weight:700;font-size:12px;cursor:pointer;font-family:'Nunito Sans',sans-serif;">Reset Token</button>
         </div>
+        <button onclick="startGitHubDeploy()" style="width:100%;background:linear-gradient(135deg,#24292F,#6E40C9);border:none;border-radius:12px;padding:12px;color:#fff;font-weight:800;font-size:13px;cursor:pointer;font-family:'Nunito Sans',sans-serif;">🔄 Update &amp; Republish</button>
       </div>
 
       <!-- ERROR STATE -->
@@ -7717,6 +7734,14 @@ function disconnectSync(){
 /* ══ SHARE HELPERS ══ */
 let _sandboxUrl = "";
 
+/* Always hide share overlay on boot — in case HTML was saved while it was open */
+(function(){
+  const ov = document.getElementById("shareoverlay");
+  const sh = document.getElementById("sharesheet");
+  if(ov) ov.style.display = "none";
+  if(sh) sh.style.transform = "translateY(100%)";
+})();
+
 function _getShareURL() { return window.location.href || location.href; }
 function _getShareMsg(url) {
   url = url || _getShareURL();
@@ -7724,6 +7749,11 @@ function _getShareMsg(url) {
 }
 
 function openShare() {
+  /* Always reset panels to clean state before showing */
+  var panels = ["share-sandbox","sb-setup","sb-loading","sb-success","sb-error"];
+  panels.forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display="none"; });
+  var main = document.getElementById("share-main");
+  if(main) main.style.display = "block";
   showSandboxPanel("main");
   const overlay = document.getElementById("shareoverlay");
   const sheet = document.getElementById("sharesheet");
@@ -7735,12 +7765,41 @@ function closeShare() {
   const overlay = document.getElementById("shareoverlay");
   const sheet = document.getElementById("sharesheet");
   sheet.style.transform = "translateY(100%)";
-  setTimeout(() => { overlay.style.display = "none"; }, 300);
+  setTimeout(() => {
+    overlay.style.display = "none";
+    /* Reset inner panels so next open is always clean */
+    var panels = ["share-sandbox","sb-setup","sb-loading","sb-success","sb-error"];
+    panels.forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display="none"; });
+    var main = document.getElementById("share-main");
+    if(main) main.style.display = "block";
+  }, 300);
 }
 
 /* WhatsApp / Email share of current page URL */
 function _buildHtmlFile() {
-  const html = document.documentElement.outerHTML;
+  /* Force overlay hidden in DOM before capturing */
+  const _ov = document.getElementById("shareoverlay");
+  const _sh = document.getElementById("sharesheet");
+  const _ovD = _ov ? _ov.style.display : "";
+  const _shT = _sh ? _sh.style.transform : "";
+  if(_ov) _ov.style.display = "none";
+  if(_sh) _sh.style.transform = "translateY(100%)";
+  const _pd = {"share-main":"block","share-sandbox":"none","sb-setup":"none","sb-loading":"none","sb-success":"none","sb-error":"none"};
+  const _pp = {};
+  Object.keys(_pd).forEach(id=>{ const el=document.getElementById(id); if(el){_pp[id]=el.style.display; el.style.display=_pd[id];} });
+
+  let html = document.documentElement.outerHTML;
+
+  /* Restore DOM */
+  if(_ov) _ov.style.display = _ovD;
+  if(_sh) _sh.style.transform = _shT;
+  Object.keys(_pd).forEach(id=>{ const el=document.getElementById(id); if(el&&_pp[id]!==undefined) el.style.display=_pp[id]; });
+
+  /* String-level cleanup as backup */
+  html = html.replace(/id="shareoverlay"[^>]*style="[^"]*display:\s*block[^"]*"/g, m=>m.replace(/display:\s*block/,"display: none"));
+  html = html.replace(/id="sharesheet"[^>]*style="[^"]*translateY\(0[^)]*\)[^"]*"/g, m=>m.replace(/translateY\([^)]*\)/,"translateY(100%)"));
+  html = html.replace(/id="sb-loading"[^>]*style="[^"]*display:\s*block[^"]*"/g, m=>m.replace(/display:\s*block/,"display: none"));
+
   return new File([html], "HouseBudgetTracker.html", { type: "text/html" });
 }
 function shareWhatsApp() {
@@ -7833,8 +7892,27 @@ function openGitHubPanel() {
   document.getElementById("share-main").style.display = "none";
   document.getElementById("share-sandbox").style.display = "block";
   const cfg = _getGitHubCfg();
-  if (cfg && cfg.token) {
-    startGitHubDeploy(); // token already saved → go straight to deploy
+  if (cfg && cfg.token && cfg.repoName) {
+    /* Already published before — show the success screen with existing URL, don't re-deploy */
+    _getGitHubCfg._restoring = true;
+    fetch("https://api.github.com/user", {
+      headers: { "Authorization": "Bearer " + cfg.token, "Accept": "application/vnd.github+json" }
+    }).then(r => r.ok ? r.json() : null).then(user => {
+      if (!user) { showSandboxPanel("setup"); return; }
+      const siteUrl = "https://" + user.login + ".github.io/" + cfg.repoName + "/";
+      _sandboxUrl = siteUrl;
+      const qr = document.getElementById("sb-qr");
+      if (qr) qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=" + encodeURIComponent(siteUrl) + "&margin=6";
+      const urlBox = document.getElementById("sb-url-box");
+      if (urlBox) urlBox.textContent = siteUrl;
+      const copyBtn = document.getElementById("sb-copy-btn");
+      if (copyBtn) { copyBtn.textContent = "Copy"; copyBtn.style.background = "#6E40C9"; }
+      showInstallTab("android");
+      showSandboxPanel("success");
+    }).catch(() => showSandboxPanel("setup"));
+  } else if (cfg && cfg.token) {
+    /* Has token but no repo yet — go straight to deploy */
+    startGitHubDeploy();
   } else {
     showSandboxPanel("setup");
   }
@@ -7939,8 +8017,42 @@ async function startGitHubDeploy() {
 
     _animProgress(55, 1200);
 
-    /* Step 3: Upload index.html */
-    const html = document.documentElement.outerHTML;
+    /* Step 3: Upload index.html — clean overlay state before saving */
+    /* First force-hide the overlay in the live DOM so outerHTML captures it correctly */
+    const _ov = document.getElementById("shareoverlay");
+    const _sh = document.getElementById("sharesheet");
+    const _ovPrev = _ov ? _ov.style.display : "";
+    const _shPrev = _sh ? _sh.style.transform : "";
+    if(_ov) _ov.style.display = "none";
+    if(_sh) _sh.style.transform = "translateY(100%)";
+    /* Reset all inner panel states in DOM too */
+    const _panelDefaults = {"share-main":"block","share-sandbox":"none","sb-setup":"none","sb-loading":"none","sb-success":"none","sb-error":"none"};
+    const _panelPrev = {};
+    Object.keys(_panelDefaults).forEach(id => {
+      const el = document.getElementById(id);
+      if(el){ _panelPrev[id] = el.style.display; el.style.display = _panelDefaults[id]; }
+    });
+
+    let html = document.documentElement.outerHTML;
+
+    /* Restore DOM after capturing */
+    if(_ov) _ov.style.display = _ovPrev;
+    if(_sh) _sh.style.transform = _shPrev;
+    Object.keys(_panelDefaults).forEach(id => {
+      const el = document.getElementById(id);
+      if(el && _panelPrev[id] !== undefined) el.style.display = _panelPrev[id];
+    });
+
+    /* Also fix it directly in the HTML string as a second safety layer */
+    html = html.replace(/id="shareoverlay"[^>]*style="[^"]*display:\s*block[^"]*"/g,
+      match => match.replace(/display:\s*block/, "display: none"));
+    html = html.replace(/id="sharesheet"[^>]*style="[^"]*translateY\(0[^"]*"/g,
+      match => match.replace(/translateY\([^)]*\)/, "translateY(100%)"));
+    html = html.replace(/id="sb-loading"[^>]*style="[^"]*display:\s*block[^"]*"/g,
+      match => match.replace(/display:\s*block/, "display: none"));
+    html = html.replace(/id="sb-success"[^>]*style="[^"]*display:\s*block[^"]*"/g,
+      match => match.replace(/display:\s*block/, "display: none"));
+
     const b64 = htmlToBase64(html);
 
     let sha = undefined;
